@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSC IT Maharashtra Exam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe5d9 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .timer {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .question-palette {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-btn {
+            width: 50px;
+            height: 45px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .question-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .question-btn.current {
+            box-shadow: 0 0 0 3px #ff6b35;
+        }
+
+        .question-btn.answered {
+            background: #10b981;
+            color: white;
+        }
+
+        .question-btn.not-answered {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .question-btn.not-visited {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .legend {
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .legend-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .question-area {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .section-badge {
+            background: #ff6b35;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .marks-badge {
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #1f2937;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option-label:hover {
+            border-color: #ff6b35;
+            background: #fff5f0;
+        }
+
+        .option-label.selected {
+            border-color: #ff6b35;
+            background: #fff5f0;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+            margin-top: 3px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .text-input, .textarea-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .textarea-input {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .text-input:focus, .textarea-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .code-area {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            background: #f9fafb;
+            resize: vertical;
+        }
+
+        .code-area:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .match-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .match-column h4 {
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+
+        .match-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f9fafb;
+            border-radius: 6px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .match-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f3f4f6;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-previous {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-previous:hover:not(:disabled) {
+            background: #4b5563;
+        }
+
+        .btn-next {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            background: #e85d2a;
+        }
+
+        .btn-submit {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #059669;
+        }
+
+        .intro-screen, .result-screen {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .intro-header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: -40px -40px 30px -40px;
+        }
+
+        .instructions {
+            background: #fff5f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .instructions h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+        }
+
+        .pattern-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .pattern-table th,
+        .pattern-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .pattern-table th {
+            background: #f9fafb;
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe5d9 100%);
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6b35;
+            margin: 20px 0;
+        }
+
+        .result-grade {
+            display: inline-block;
+            background: white;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid;
+        }
+
+        .stat-card.correct {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .stat-card.incorrect {
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+
+        .stat-card.unattempted {
+            background: #fef3c7;
+            border-color: #fbbf24;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .instruction-note {
+            background: #dbeafe;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #1e40af;
+        }
+
+        .choice-note {
+            background: #fef3c7;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border-left: 4px solid #f59e0b;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #92400e;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+            .question-palette {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .question-btn {
+                width: 55px;
+                font-size: 10px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 18px;
+            }
+            .timer {
+                font-size: 18px;
+                padding: 8px 15px;
+            }
+            .question-text {
+                font-size: 16px;
+            }
+            .match-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="introScreen" class="intro-screen">
+        <div class="intro-header">
+            <h1>Maharashtra State Board</h1>
+            <h2>HSC Information Technology Examination</h2>
+            <p>Class XII Science | Subject Code: 802</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Examination Pattern (Total: 80 Marks)</h3>
+            <table class="pattern-table">
+                <thead>
+                    <tr>
+                        <th>Q No.</th>
+                        <th>Section</th>
+                        <th>Questions</th>
+                        <th>Marks Each</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Q1</td>
+                        <td>Fill in the Blanks</td>
+                        <td>10</td>
+                        <td>1</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Q2</td>
+                        <td>True or False</td>
+                        <td>10</td>
+                        <td>1</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Q3</td>
+                        <td>MCQ (Single Answer)</td>
+                        <td>10</td>
+                        <td>1</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Q4</td>
+                        <td>MCQ (Two Correct)</td>
+                        <td>10</td>
+                        <td>2</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>Q5</td>
+                        <td>MCQ (Three Correct)</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>Q6</td>
+                        <td>Match the Following</td>
+                        <td>4 pairs</td>
+                        <td>1</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>Q7</td>
+                        <td>Answer Briefly (Any 5)</td>
+                        <td>10</td>
+                        <td>2</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Q8A</td>
+                        <td>HTML Program (Any 1)</td>
+                        <td>2</td>
+                        <td>5</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>Q8B</td>
+                        <td>JavaScript Program (Any 1)</td>
+                        <td>2</td>
+                        <td>5</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <th colspan="4">Total Marks</th>
+                        <th>80</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="instruction-note">
+            <strong>⏱️ Duration: 3 Hours (180 minutes)</strong><br><br>
+            <strong>Important Instructions:</strong><br>
+            ✓ All questions are compulsory except where internal choice is given<br>
+            ✓ Q7: Answer any 5 questions out of 10 (2 mark each)<br>
+            ✓ Q8A: Answer any 1 HTML program out of 2 (5 marks)<br>
+            ✓ Q8B: Answer any 1 JavaScript program out of 2 (5 marks)<br>
+            ✓ Read each question carefully before answering<br>
+            ✓ You can navigate between questions freely<br>
+            ✓ Review your answers before final submission
+        </div>
+
+        <button class="start-btn" onclick="startExam()">Start Examination</button>
+    </div>
+
+    <div id="examScreen" class="hidden">
+        <div class="container">
+            <div class="header">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h1>HSC IT Examination</h1>
+                        <p>Maharashtra State Board - Class XII</p>
+                    </div>
+                    <div class="timer" id="timer">03:00:00</div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="sidebar">
+                    <h3>Question Palette</h3>
+                    <div class="question-palette" id="questionPalette"></div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-box" style="background: #10b981;"></div>
+                            <span>Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box" style="background: #fbbf24;"></div>
+                            <span>Not Answered</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box" style="background: #e5e7eb;"></div>
+                            <span>Not Visited</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-area">
+                    <div class="question-header">
+                        <div>
+                            <span class="section-badge" id="sectionBadge">Section</span>
+                            <span style="margin: 0 10px; color: #6b7280;">Q <span id="questionNumber">1</span> of <span id="totalQuestions">57</span></span>
+                        </div>
+                        <span class="marks-badge" id="marksBadge">1 Mark</span>
+                    </div>
+
+                    <div id="choiceNote"></div>
+                    <div class="question-text" id="questionText"></div>
+                    <div id="questionOptions"></div>
+
+                    <div class="navigation">
+                        <button class="nav-btn btn-previous" onclick="previousQuestion()" id="prevBtn">Previous</button>
+                        <div style="display: flex; gap: 15px;">
+                            <button class="nav-btn btn-next" onclick="nextQuestion()" id="nextBtn">Next</button>
+                            <button class="nav-btn btn-submit" onclick="submitExam()">Submit Exam</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultScreen" class="hidden result-screen">
+        <div class="intro-header">
+            <h1>Examination Result</h1>
+            <p>Maharashtra State Board HSC IT</p>
+        </div>
+
+        <div class="result-card">
+            <p style="font-size: 18px; color: #6b7280;">Your Score</p>
+            <div class="result-score" id="resultScore">0/78</div>
+            <div class="result-grade" id="resultGrade">Grade</div>
+            <p style="margin-top: 15px; font-size: 20px; color: #6b7280;">
+                Percentage: <strong id="resultPercentage">0%</strong>
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card correct">
+                <div class="stat-number" id="correctCount">0</div>
+                <div class="stat-label">Correct Answers</div>
+            </div>
+            <div class="stat-card incorrect">
+                <div class="stat-number" id="attemptedCount">0</div>
+                <div class="stat-label">Total Attempted</div>
+            </div>
+            <div class="stat-card unattempted">
+                <div class="stat-number" id="unattemptedCount">0</div>
+                <div class="stat-label">Not Attempted</div>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="restartExam()">Restart Exam</button>
+    </div>
+
+    <script>
+        var questions = [
+            // Q1: Fill in the Blanks (10 questions, 1 mark each = 10 marks)
+            {id: 1, qno: "1(a)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "HTML stands for _______.", answer: "hypertext markup language", marks: 1},
+            {id: 2, qno: "1(b)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "CSS stands for _______.", answer: "cascading style sheets", marks: 1},
+            {id: 3, qno: "1(c)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "The _______ tag is used to embed audio in HTML5.", answer: "audio", marks: 1},
+            {id: 4, qno: "1(d)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "_______ stands for Search Engine Optimization.", answer: "seo", marks: 1},
+            {id: 5, qno: "1(e)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "In PHP, variables start with the _______ symbol.", answer: "$", marks: 1},
+            {id: 6, qno: "1(f)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "_______ is the protocol used to transfer web pages.", answer: "http", marks: 1},
+            {id: 7, qno: "1(g)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "The _______ tag is used to create ordered lists in HTML.", answer: "ol", marks: 1},
+            {id: 8, qno: "1(h)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "_______ stands for Document Object Model.", answer: "dom", marks: 1},
+            {id: 9, qno: "1(i)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "AI stands for _______.", answer: "artificial intelligence", marks: 1},
+            {id: 10, qno: "1(j)", type: 'fillblank', section: 'Q1: Fill in the Blanks', question: "_______ is used to style web pages.", answer: "css", marks: 1},
+
+            // Q2: True or False (10 questions, 1 mark each = 10 marks)
+            {id: 11, qno: "2(a)", type: 'truefalse', section: 'Q2: True or False', question: "HTML5 supports audio and video without plugins.", options: ["True", "False"], correct: 0, marks: 1},
+            {id: 12, qno: "2(b)", type: 'truefalse', section: 'Q2: True or False', question: "JavaScript is a server-side scripting language only.", options: ["True", "False"], correct: 1, marks: 1},
+            {id: 13, qno: "2(c)", type: 'truefalse', section: 'Q2: True or False', question: "Cloud Computing provides on-demand computing resources.", options: ["True", "False"], correct: 0, marks: 1},
+            {id: 14, qno: "2(d)", type: 'truefalse', section: 'Q2: True or False', question: "B2C stands for Business-to-Customer in E-Commerce.", options: ["True", "False"], correct: 0, marks: 1},
+            {id: 15, qno: "2(e)", type: 'truefalse', section: 'Q2: True or False', question: "PHP is case-sensitive for all variables.", options: ["True", "False"], correct: 0, marks: 1},
+            {id: 16, qno: "2(f)", type: 'truefalse', section: 'Q2: True or False', question: "5G is the fifth generation of wireless technology.", options: ["True", "False"], correct: 0, marks: 1},
+            {id: 17, qno: "2(g)", type: 'truefalse', section: 'Q2: True or False', question: "IoT stands for Internet of Technology.", options: ["True", "False"], correct: 1, marks: 1},
+            {id: 18, qno: "2(h)", type: 'truefalse', section: 'Q2: True or False', question: "SaaS stands for Software as a Service.", options: ["True", "False"], correct: 0, marks: 1},
+            {id: 19, qno: "2(i)", type: 'truefalse', section: 'Q2: True or False', question: "E-Governance involves only G2C transactions.", options: ["True", "False"], correct: 1, marks: 1},
+            {id: 20, qno: "2(j)", type: 'truefalse', section: 'Q2: True or False', question: "Cookies are used to store data on the client side.", options: ["True", "False"], correct: 0, marks: 1},
+
+            // Q3: MCQ Single Answer (10 questions, 1 mark each = 10 marks)
+            {id: 21, qno: "3(a)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "Which tag is used to create an inline frame in HTML5?", options: ["<frame>", "<iframe>", "<inline>", "<frameset>"], correct: 1, marks: 1},
+            {id: 22, qno: "3(b)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "Which CSS property changes text color?", options: ["text-color", "font-color", "color", "text-style"], correct: 2, marks: 1},
+            {id: 23, qno: "3(c)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "What does DOM stand for?", options: ["Document Object Model", "Data Object Model", "Digital Object Method", "Document Oriented Model"], correct: 0, marks: 1},
+            {id: 24, qno: "3(d)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "Which is NOT a cloud service model?", options: ["IaaS", "PaaS", "SaaS", "DaaS"], correct: 3, marks: 1},
+            {id: 25, qno: "3(e)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "IoT stands for:", options: ["Internet of Things", "Internet of Technology", "Integrated of Things", "Internet of Transmission"], correct: 0, marks: 1},
+            {id: 26, qno: "3(f)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "Which function includes files in PHP?", options: ["import()", "require()", "add()", "insert()"], correct: 1, marks: 1},
+            {id: 27, qno: "3(g)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "Which HTML5 tag is used for video?", options: ["<media>", "<movie>", "<video>", "<film>"], correct: 2, marks: 1},
+            {id: 28, qno: "3(h)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "AI stands for:", options: ["Automatic Intelligence", "Artificial Intelligence", "Applied Intelligence", "Advanced Integration"], correct: 1, marks: 1},
+            {id: 29, qno: "3(i)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "Which E-Commerce type is business to business?", options: ["B2C", "C2C", "B2B", "C2B"], correct: 2, marks: 1},
+            {id: 30, qno: "3(j)", type: 'mcq_single', section: 'Q3: MCQ Single Answer', question: "What does SEO help improve?", options: ["Website speed", "Search ranking", "Server security", "Database performance"], correct: 1, marks: 1},
+
+            // Q4: MCQ Two Correct (10 questions, 2 marks each = 20 marks)
+            {id: 31, qno: "4(a)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two HTML5 form input types:", options: ["email", "telephone", "date", "number"], correct: [0, 2], marks: 2},
+            {id: 32, qno: "4(b)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two valid CSS positioning values:", options: ["relative", "flexible", "absolute", "dynamic"], correct: [0, 2], marks: 2},
+            {id: 33, qno: "4(c)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two JavaScript built-in objects:", options: ["String", "Integer", "Math", "Float"], correct: [0, 2], marks: 2},
+            {id: 34, qno: "4(d)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two types of web hosting:", options: ["Shared", "Personal", "Dedicated", "Custom"], correct: [0, 2], marks: 2},
+            {id: 35, qno: "4(e)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two E-Commerce advantages:", options: ["24/7 availability", "Physical inspection", "Global reach", "Face-to-face"], correct: [0, 2], marks: 2},
+            {id: 36, qno: "4(f)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two SEO techniques:", options: ["Keywords", "Encryption", "Backlinks", "Cookies"], correct: [0, 2], marks: 2},
+            {id: 37, qno: "4(g)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two network topologies:", options: ["Star", "Linear", "Ring", "Circular"], correct: [0, 2], marks: 2},
+            {id: 38, qno: "4(h)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two JavaScript loop types:", options: ["for", "repeat", "while", "loop"], correct: [0, 2], marks: 2},
+            {id: 39, qno: "4(i)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two database management systems:", options: ["MySQL", "JavaDB", "Oracle", "HTMLBase"], correct: [0, 2], marks: 2},
+            {id: 40, qno: "4(j)", type: 'mcq_two', section: 'Q4: MCQ Two Correct Answers', question: "Select two web browsers:", options: ["Chrome", "Windows", "Firefox", "Linux"], correct: [0, 2], marks: 2},
+
+            // Q5: MCQ Three Correct (2 questions, 3 marks each = 6 marks)
+            {id: 41, qno: "5(a)", type: 'mcq_three', section: 'Q5: MCQ Three Correct Answers', question: "Select three programming languages used in web development:", options: ["HTML", "Photoshop", "JavaScript", "CSS", "Excel", "Paint"], correct: [0, 2, 3], marks: 3},
+            {id: 42, qno: "5(b)", type: 'mcq_three', section: 'Q5: MCQ Three Correct Answers', question: "Select three components of the Internet:", options: ["Web Server", "Mouse", "Router", "Keyboard", "DNS", "Monitor"], correct: [0, 2, 4], marks: 3},
+
+            // Q6: Match the Following (4 pairs, 1 mark each = 4 marks)
+            {id: 43, qno: "6", type: 'match', section: 'Q6: Match the Following', question: "Match the following technologies with their purposes:", 
+                columnA: ["HTML", "CSS", "JavaScript", "PHP"],
+                columnB: ["Styling", "Server-side scripting", "Structure", "Client-side scripting"],
+                correct: [2, 0, 3, 1], marks: 4},
+
+            // Q7: Answer Briefly (10 questions, answer any 5, 2 mark each = 10 marks)
+            {id: 44, qno: "7(a)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "What is HTML5?", marks: 2, choice: true, choiceText: "Answer any 5 out of 10"},
+            {id: 45, qno: "7(b)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "Define Cloud Computing.", marks: 2, choice: true},
+            {id: 46, qno: "7(c)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "What is E-Commerce?", marks: 2, choice: true},
+            {id: 47, qno: "7(d)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "Explain IoT (Internet of Things).", marks: 2, choice: true},
+            {id: 48, qno: "7(e)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "What is the difference between <div> and <span> tags?", marks: 2, choice: true},
+            {id: 49, qno: "7(f)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "What is CSS Box Model?", marks: 2, choice: true},
+            {id: 50, qno: "7(g)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "Define SEO (Search Engine Optimization).", marks: 2, choice: true},
+            {id: 51, qno: "7(h)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "What is the purpose of JavaScript in web development?", marks: 2, choice: true},
+            {id: 52, qno: "7(i)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "Explain the difference between GET and POST methods.", marks: 2, choice: true},
+            {id: 53, qno: "7(j)", type: 'brief', section: 'Q7: Answer Briefly (Any 5)', question: "What is a Database Management System (DBMS)?", marks: 2, choice: true},
+
+            // Q8A: HTML Programs (2 questions, answer any 1, 5 marks)
+            {id: 54, qno: "8A(i)", type: 'code', section: 'Q8A: HTML Program (Any 1)', question: "Write an HTML program to create a registration form with fields: Name, Email, Password, Gender (radio buttons), Course (dropdown), and a Submit button.", marks: 5, choice: true, choiceText: "Answer any 1 out of 2"},
+            {id: 55, qno: "8A(ii)", type: 'code', section: 'Q8A: HTML Program (Any 1)', question: "Write an HTML program to create a table displaying student information with columns: Roll No, Name, Marks in 3 subjects, and Total. Include at least 3 student records.", marks: 5, choice: true},
+
+            // Q8B: JavaScript Programs (2 questions, answer any 1, 5 marks)
+            {id: 56, qno: "8B(i)", type: 'code', section: 'Q8B: JavaScript Program (Any 1)', question: "Write a JavaScript program to validate a form that checks if email is in correct format and password is at least 8 characters long. Display appropriate error messages.", marks: 5, choice: true, choiceText: "Answer any 1 out of 2"},
+            {id: 57, qno: "8B(ii)", type: 'code', section: 'Q8B: JavaScript Program (Any 1)', question: "Write a JavaScript program to calculate and display the factorial of a number entered by the user. Use a function to calculate factorial.", marks: 5, choice: true}
+        ];
+
+        var currentQuestion = 0;
+        var userAnswers = {};
+        var questionStatus = {};
+        var timerInterval;
+        var timeRemaining = 180 * 60;
+
+        function startExam() {
+            document.getElementById('introScreen').classList.add('hidden');
+            document.getElementById('examScreen').classList.remove('hidden');
+            initializeExam();
+            startTimer();
+        }
+
+        function initializeExam() {
+            createQuestionPalette();
+            loadQuestion(0);
+        }
+
+        function createQuestionPalette() {
+            var palette = document.getElementById('questionPalette');
+            palette.innerHTML = '';
+            
+            questions.forEach(function(q, index) {
+                var btn = document.createElement('button');
+                btn.className = 'question-btn not-visited';
+                btn.textContent = q.qno;
+                btn.onclick = function() { loadQuestion(index); };
+                palette.appendChild(btn);
+            });
+            
+            document.getElementById('totalQuestions').textContent = questions.length;
+        }
+
+        function loadQuestion(index) {
+            currentQuestion = index;
+            var q = questions[index];
+            
+            if (!questionStatus[index]) {
+                questionStatus[index] = 'visited';
+            }
+            
+            document.getElementById('questionNumber').textContent = q.qno;
+            document.getElementById('sectionBadge').textContent = q.section;
+            document.getElementById('marksBadge').textContent = q.marks + ' Mark' + (q.marks > 1 ? 's' : '');
+            document.getElementById('questionText').textContent = q.question;
+            
+            var choiceNote = document.getElementById('choiceNote');
+            if (q.choice && q.choiceText) {
+                choiceNote.innerHTML = '<div class="choice-note">⚠️ ' + q.choiceText + '</div>';
+            } else {
+                choiceNote.innerHTML = '';
+            }
+            
+            var optionsDiv = document.getElementById('questionOptions');
+            optionsDiv.innerHTML = '';
+            
+            switch(q.type) {
+                case 'fillblank':
+                    renderFillBlank(optionsDiv, q, index);
+                    break;
+                case 'truefalse':
+                case 'mcq_single':
+                    renderSingleChoice(optionsDiv, q, index);
+                    break;
+                case 'mcq_two':
+                    renderMultipleChoice(optionsDiv, q, index, 2);
+                    break;
+                case 'mcq_three':
+                    renderMultipleChoice(optionsDiv, q, index, 3);
+                    break;
+                case 'match':
+                    renderMatch(optionsDiv, q, index);
+                    break;
+                case 'brief':
+                    renderBrief(optionsDiv, q, index);
+                    break;
+                case 'code':
+                    renderCode(optionsDiv, q, index);
+                    break;
+            }
+            
+            updatePalette();
+            updateNavButtons();
+        }
+
+        function renderFillBlank(container, q, index) {
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'text-input';
+            input.placeholder = 'Type your answer here...';
+            input.value = userAnswers[index] || '';
+            input.oninput = function() {
+                userAnswers[index] = this.value.trim();
+                updateQuestionStatus(index);
+            };
+            container.appendChild(input);
+        }
+
+        function renderSingleChoice(container, q, index) {
+            var optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options';
+            
+            q.options.forEach(function(option, i) {
+                var label = document.createElement('label');
+                label.className = 'option-label';
+                if (userAnswers[index] === i) {
+                    label.classList.add('selected');
+                }
+                
+                var radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'q' + index;
+                radio.value = i;
+                radio.checked = userAnswers[index] === i;
+                radio.onchange = function() {
+                    userAnswers[index] = i;
+                    updateQuestionStatus(index);
+                    var labels = optionsContainer.querySelectorAll('.option-label');
+                    labels.forEach(function(l) { l.classList.remove('selected'); });
+                    label.classList.add('selected');
+                };
+                
+                var text = document.createTextNode(option);
+                label.appendChild(radio);
+                label.appendChild(text);
+                optionsContainer.appendChild(label);
+            });
+            
+            container.appendChild(optionsContainer);
+        }
+
+        function renderMultipleChoice(container, q, index, maxSelect) {
+            var note = document.createElement('div');
+            note.style.cssText = 'background: #fef3c7; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; color: #92400e; font-weight: bold;';
+            note.textContent = '⚠️ Select exactly ' + maxSelect + ' correct answers';
+            container.appendChild(note);
+            
+            var optionsContainer = document.createElement('div');
+            optionsContainer.className = 'options';
+            
+            if (!userAnswers[index]) {
+                userAnswers[index] = [];
+            }
+            
+            q.options.forEach(function(option, i) {
+                var label = document.createElement('label');
+                label.className = 'option-label';
+                if (userAnswers[index].includes(i)) {
+                    label.classList.add('selected');
+                }
+                
+                var checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = i;
+                checkbox.checked = userAnswers[index].includes(i);
+                checkbox.onchange = function() {
+                    if (this.checked) {
+                        if (userAnswers[index].length < maxSelect) {
+                            userAnswers[index].push(i);
+                            label.classList.add('selected');
+                        } else {
+                            this.checked = false;
+                            alert('You can only select ' + maxSelect + ' options');
+                        }
+                    } else {
+                        var idx = userAnswers[index].indexOf(i);
+                        if (idx > -1) {
+                            userAnswers[index].splice(idx, 1);
+                            label.classList.remove('selected');
+                        }
+                    }
+                    updateQuestionStatus(index);
+                };
+                
+                var text = document.createTextNode(option);
+                label.appendChild(checkbox);
+                label.appendChild(text);
+                optionsContainer.appendChild(label);
+            });
+            
+            container.appendChild(optionsContainer);
+        }
+
+        function renderMatch(container, q, index) {
+            var matchContainer = document.createElement('div');
+            matchContainer.className = 'match-container';
+            
+            var colA = document.createElement('div');
+            colA.className = 'match-column';
+            colA.innerHTML = '<h4>Column A</h4>';
+            
+            var colB = document.createElement('div');
+            colB.className = 'match-column';
+            colB.innerHTML = '<h4>Column B (Select Match)</h4>';
+            
+            if (!userAnswers[index]) {
+                userAnswers[index] = new Array(q.columnA.length).fill(-1);
+            }
+            
+            q.columnA.forEach(function(item, i) {
+                var itemDiv = document.createElement('div');
+                itemDiv.className = 'match-item';
+                itemDiv.textContent = (i + 1) + '. ' + item;
+                colA.appendChild(itemDiv);
+                
+                var selectDiv = document.createElement('div');
+                selectDiv.className = 'match-item';
+                
+                var select = document.createElement('select');
+                select.className = 'match-select';
+                select.innerHTML = '<option value="-1">Select match...</option>';
+                
+                q.columnB.forEach(function(opt, j) {
+                    var option = document.createElement('option');
+                    option.value = j;
+                    option.textContent = opt;
+                    if (userAnswers[index][i] === j) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                
+                select.onchange = function() {
+                    userAnswers[index][i] = parseInt(this.value);
+                    updateQuestionStatus(index);
+                };
+                
+                selectDiv.appendChild(select);
+                colB.appendChild(selectDiv);
+            });
+            
+            matchContainer.appendChild(colA);
+            matchContainer.appendChild(colB);
+            container.appendChild(matchContainer);
+        }
+
+        function renderBrief(container, q, index) {
+            var textarea = document.createElement('textarea');
+            textarea.className = 'textarea-input';
+            textarea.placeholder = 'Write your answer here... (Brief answer expected)';
+            textarea.value = userAnswers[index] || '';
+            textarea.oninput = function() {
+                userAnswers[index] = this.value.trim();
+                updateQuestionStatus(index);
+            };
+            container.appendChild(textarea);
+        }
+
+        function renderCode(container, q, index) {
+            var textarea = document.createElement('textarea');
+            textarea.className = 'code-area';
+            textarea.placeholder = 'Write your code here...';
+            textarea.value = userAnswers[index] || '';
+            textarea.oninput = function() {
+                userAnswers[index] = this.value.trim();
+                updateQuestionStatus(index);
+            };
+            container.appendChild(textarea);
+        }
+
+        function updateQuestionStatus(index) {
+            var answer = userAnswers[index];
+            
+            if (answer !== undefined && answer !== null && answer !== '') {
+                if (Array.isArray(answer) && answer.length > 0) {
+                    questionStatus[index] = 'answered';
+                } else if (!Array.isArray(answer)) {
+                    questionStatus[index] = 'answered';
+                } else {
+                    questionStatus[index] = 'visited';
+                }
+            } else {
+                questionStatus[index] = 'visited';
+            }
+            
+            updatePalette();
+        }
+
+        function updatePalette() {
+            var buttons = document.querySelectorAll('.question-btn');
+            buttons.forEach(function(btn, index) {
+                btn.className = 'question-btn';
+                
+                if (index === currentQuestion) {
+                    btn.classList.add('current');
+                }
+                
+                if (questionStatus[index] === 'answered') {
+                    btn.classList.add('answered');
+                } else if (questionStatus[index] === 'visited') {
+                    btn.classList.add('not-answered');
+                } else {
+                    btn.classList.add('not-visited');
+                }
+            });
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+            } else {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                loadQuestion(currentQuestion - 1);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                loadQuestion(currentQuestion + 1);
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(function() {
+                timeRemaining--;
+                
+                var hours = Math.floor(timeRemaining / 3600);
+                var minutes = Math.floor((timeRemaining % 3600) / 60);
+                var seconds = timeRemaining % 60;
+                
+                document.getElementById('timer').textContent = 
+                    String(hours).padStart(2, '0') + ':' + 
+                    String(minutes).padStart(2, '0') + ':' + 
+                    String(seconds).padStart(2, '0');
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Time is up! Submitting exam automatically.');
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function submitExam() {
+            if (!confirm('Are you sure you want to submit the exam?')) {
+                return;
+            }
+            
+            clearInterval(timerInterval);
+            calculateResults();
+            
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+        }
+
+        function calculateResults() {
+            var totalMarks = 80;
+            var obtainedMarks = 0;
+            var attempted = 0;
+            var correct = 0;
+            
+            var q7Attempts = 0;
+            var q8aAttempts = 0;
+            var q8bAttempts = 0;
+            
+            questions.forEach(function(q, index) {
+                var answer = userAnswers[index];
+                var hasAnswer = false;
+                
+                if (answer !== undefined && answer !== null && answer !== '') {
+                    if (Array.isArray(answer) && answer.length > 0) {
+                        hasAnswer = true;
+                    } else if (!Array.isArray(answer)) {
+                        hasAnswer = true;
+                    }
+                }
+                
+                if (hasAnswer) {
+                    attempted++;
+                    
+                    if (q.type === 'fillblank') {
+                        if (answer.toLowerCase() === q.answer.toLowerCase()) {
+                            obtainedMarks += q.marks;
+                            correct++;
+                        }
+                    } else if (q.type === 'truefalse' || q.type === 'mcq_single') {
+                        if (answer === q.correct) {
+                            obtainedMarks += q.marks;
+                            correct++;
+                        }
+                    } else if (q.type === 'mcq_two' || q.type === 'mcq_three') {
+                        if (Array.isArray(answer) && arraysEqual(answer.sort(), q.correct.sort())) {
+                            obtainedMarks += q.marks;
+                            correct++;
+                        }
+                    } else if (q.type === 'match') {
+                        var correctMatches = 0;
+                        if (Array.isArray(answer)) {
+                            for (var j = 0; j < answer.length; j++) {
+                                if (answer[j] === q.correct[j]) {
+                                    correctMatches++;
+                                }
+                            }
+                        }
+                        obtainedMarks += correctMatches;
+                        if (correctMatches > 0) correct++;
+                    } else if (q.type === 'brief') {
+                        if (answer.length > 20) {
+                            q7Attempts++;
+                            if (q7Attempts <= 8) {
+                                obtainedMarks += q.marks;
+                                correct++;
+                            }
+                        }
+                    } else if (q.type === 'code') {
+                        if (answer.length > 30) {
+                            if (q.section.includes('8A')) {
+                                q8aAttempts++;
+                                if (q8aAttempts === 1) {
+                                    obtainedMarks += q.marks;
+                                    correct++;
+                                }
+                            } else if (q.section.includes('8B')) {
+                                q8bAttempts++;
+                                if (q8bAttempts === 1) {
+                                    obtainedMarks += q.marks;
+                                    correct++;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            var percentage = ((obtainedMarks / totalMarks) * 100).toFixed(2);
+            var grade = getGrade(percentage);
+            
+            document.getElementById('resultScore').textContent = obtainedMarks + '/' + totalMarks;
+            document.getElementById('resultPercentage').textContent = percentage + '%';
+            document.getElementById('resultGrade').textContent = grade;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('attemptedCount').textContent = attempted;
+            document.getElementById('unattemptedCount').textContent = questions.length - attempted;
+        }
+
+        function arraysEqual(a, b) {
+            if (a.length !== b.length) return false;
+            for (var i = 0; i < a.length; i++) {
+                if (a[i] !== b[i]) return false;
+            }
+            return true;
+        }
+
+        function getGrade(percentage) {
+            if (percentage >= 90) return 'A+';
+            if (percentage >= 80) return 'A';
+            if (percentage >= 70) return 'B+';
+            if (percentage >= 60) return 'B';
+            if (percentage >= 50) return 'C';
+            if (percentage >= 40) return 'D';
+            return 'F';
+        }
+
+        function restartExam() {
+            currentQuestion = 0;
+            userAnswers = {};
+            questionStatus = {};
+            timeRemaining = 180 * 60;
+            
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('introScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
